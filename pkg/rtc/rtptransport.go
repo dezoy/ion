@@ -149,7 +149,7 @@ func (t *RTPTransport) receiveRTP() {
 	}()
 }
 
-func (t *RTPTransport) ReadRTP() (*rtp.Packet, error) {
+func (t *RTPTransport) readRTP() (*rtp.Packet, error) {
 	return <-t.rtpCh, nil
 }
 
@@ -204,7 +204,7 @@ func (t *RTPTransport) receiveRTCP() {
 	}()
 }
 
-func (t *RTPTransport) WriteRTP(rtp *rtp.Packet) error {
+func (t *RTPTransport) writeRTP(rtp *rtp.Packet) error {
 	log.Debugf("RTPTransport.WriteRTP rtp=%v", rtp)
 	writeStream, err := t.rtpSession.OpenWriteStream()
 	if err != nil {
@@ -294,4 +294,8 @@ func (t *RTPTransport) sendUnsubscribe(sid string) {
 	}
 	unSub := "unsubscribe:" + sid
 	t.WriteRawRTCP([]byte(unSub))
+}
+
+func (t *RTPTransport) sendRR() {
+
 }

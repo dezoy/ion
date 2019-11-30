@@ -7,10 +7,11 @@ import (
 
 type Transport interface {
 	ID() string
-	ReadRTP() (*rtp.Packet, error)
-	WriteRTP(*rtp.Packet) error
+	readRTP() (*rtp.Packet, error)
+	writeRTP(*rtp.Packet) error
 	sendPLI()
 	sendNack(*rtcp.TransportLayerNack)
 	sendREMB(float64)
+	sendRR()
 	Close()
 }

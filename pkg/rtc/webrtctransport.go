@@ -206,7 +206,7 @@ func (t *WebRTCTransport) receiveRTP(remoteTrack *webrtc.Track) {
 	}
 }
 
-func (t *WebRTCTransport) ReadRTP() (*rtp.Packet, error) {
+func (t *WebRTCTransport) readRTP() (*rtp.Packet, error) {
 	rtp, ok := <-t.rtpCh
 	if !ok {
 		return nil, errChanClosed
@@ -214,7 +214,7 @@ func (t *WebRTCTransport) ReadRTP() (*rtp.Packet, error) {
 	return rtp, nil
 }
 
-func (t *WebRTCTransport) WriteRTP(pkt *rtp.Packet) error {
+func (t *WebRTCTransport) writeRTP(pkt *rtp.Packet) error {
 	if pkt == nil {
 		return errInvalidPacket
 	}
@@ -408,4 +408,10 @@ func (t *WebRTCTransport) sendREMB(lostRate float64) {
 		SSRCs:      []uint32{videoSSRC},
 	}
 	t.pc.WriteRTCP([]rtcp.Packet{remb})
+}
+func (t *WebRTCTransport) sendRR() {
+	if t.pc == nil {
+		return
+	}
+	//TODO
 }

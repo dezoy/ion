@@ -51,7 +51,7 @@ func (p *pipeline) in() {
 					time.Sleep(10 * time.Millisecond)
 					continue
 				}
-				if rtp, _ := p.pub.ReadRTP(); rtp != nil {
+				if rtp, _ := p.pub.readRTP(); rtp != nil {
 					p.pubCh <- rtp
 				}
 			}
@@ -111,12 +111,12 @@ func (p *pipeline) out() {
 						switch t.(type) {
 						case *WebRTCTransport:
 							wt := t.(*WebRTCTransport)
-							if err := wt.WriteRTP(pkt); err != nil {
+							if err := wt.writeRTP(pkt); err != nil {
 								log.Debugf("wt.WriteRTP err=%v", err)
 							}
 						case *RTPTransport:
 							rt := t.(*RTPTransport)
-							if err := rt.WriteRTP(pkt); err != nil {
+							if err := rt.writeRTP(pkt); err != nil {
 								log.Errorf("rt.WriteRTP err=%v", err)
 								rt.ResetExtSent()
 								p.delSub(rt.ID())
@@ -301,7 +301,7 @@ func (p *pipeline) writePacket(sid string, ssrc uint32, sn uint16) bool {
 			log.Debugf("pipeline.writePacket pkt not found sid=%s ssrc=%d sn=%d pkt=%v", sid, ssrc, sn, pkt)
 			return false
 		}
-		p.getSub(sid).WriteRTP(pkt)
+		p.getSub(sid).writeRTP(pkt)
 		log.Infof("pipeline.writePacket sid=%s ssrc=%d sn=%d pkt=%v", sid, ssrc, sn, pkt)
 		log.Debugf("pipeline.writePacket ok")
 		return true
