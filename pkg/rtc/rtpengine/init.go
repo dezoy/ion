@@ -1,11 +1,11 @@
-package rtc
+package rtpengine
 
 import (
 	"errors"
 	"sync"
 	"time"
 
-	"github.com/pion/ion/pkg/rtc/udp"
+	"github.com/pion/ion/pkg/rtc/rtpengine/udp"
 	"github.com/pion/webrtc/v2"
 )
 
