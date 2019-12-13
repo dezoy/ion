@@ -132,7 +132,7 @@ export default class Client extends EventEmitter {
                 pc.onicecandidate = async (e) => {
                     if (!pc.sendOffer) {
                         var jsep = pc.localDescription;
-                        console.log('Send offer sdp => ' + jsep.sdp);
+                        // console.log('Send offer sdp => ' + jsep.sdp);
                         pc.sendOffer = true
                         let result = await this._protoo.request('subscribe', { rid, jsep, mid });
                         console.log('subscribe success => result(' + mid + ') sdp => ' + result.jsep.sdp);
