@@ -29,7 +29,7 @@ client.on('stream-add', async (rid, mid) => {
     let stream = await client.subscribe(rid, mid);
     streams[rid] = stream;
     insertVideoView('remote-video-container', rid);
-    stream.render(stream.mid);
+    stream.render(rid);
     // stream.render(stream.uid); //old
 });
 
