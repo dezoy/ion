@@ -58,12 +58,16 @@ function showStatus(text) {
 }
 
 function onJoinBtnClick() {
-    var element = document.getElementById('roomId');
-    var roomId = element.value;
+    var rommEl = document.getElementById('roomId');
+    var nameEnt = document.getElementById('nameId');
+    let roomId = rommEl.value;
+    let nameId = nameEnt.value;
     if (roomId === '')
         return;
-    showStatus('join to [' + roomId + ']');
-    client.join(roomId);
+    if (nameId === '')
+        return;
+    showStatus('join to [' + roomId + '] ' + nameId);
+    client.join(roomId, nameId);
 }
 
 async function onPublishBtnClick() {
