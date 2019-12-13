@@ -25,18 +25,18 @@ client.on('transport-closed', function () {
     connected = false;
 });
 
-client.on('stream-add', async (id, rid) => {
-    let stream = await client.subscribe(id);
-    streams[id] = stream;
-    insertVideoView('remote-video-container', id);
+client.on('stream-add', async (rid, mid) => {
+    let stream = await client.subscribe(rid, mid);
+    streams[rid] = stream;
+    insertVideoView('remote-video-container', rid);
     stream.render(stream.uid);
 });
 
-client.on('stream-remove', async (id, rid) => {
-    let stream = streams[id];
-    removeVideoView(id);
+client.on('stream-remove', async (rid) => {
+    let stream = streams[rid];
+    removeVideoView(rid);
     stream.stop();
-    delete streams[id];
+    delete streams[rid];
 });
 
 function insertVideoView(parentId, id) {
