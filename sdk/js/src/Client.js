@@ -124,7 +124,7 @@ export default class Client extends EventEmitter {
                 pc.onaddstream = (e) => {
                     var stream = e.stream;
                     console.log('Stream::pc::onaddstream', stream.id);
-                    console.log(JSON.stringify(stream));
+                    console.log(stream);
                     resolve(new Stream(mid, stream));
                 }
                 pc.onremovestream = (e) => {
