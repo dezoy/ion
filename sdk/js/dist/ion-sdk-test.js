@@ -30,7 +30,8 @@ client.on('stream-add', async (rid, mid) => {
     console.log(stream)
     streams[rid] = stream;
     insertVideoView('remote-video-container', rid);
-    stream.render(stream.uid);
+    stream.render(stream.mid);
+    // stream.render(stream.uid); //old
 });
 
 client.on('stream-remove', async (rid) => {
