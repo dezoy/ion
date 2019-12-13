@@ -32,8 +32,8 @@ export default class Stream extends EventEmitter {
 
     get stream() { return this._stream };
 
-    render(elementId) {
-        this._videoElement.play({ id: this._mid, stream: this._stream, elementId });
+    render(element) {
+        this._videoElement.play({ id: this._mid, stream: this._stream, elementId: element });
     }
 
     async stop() {

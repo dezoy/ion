@@ -82,7 +82,7 @@ async function onPublishBtnClick() {
     }
     showStatus('start publish!');
     let stream = await client.publish(/*{ codec: 'H264' }*/);
-    let id = stream.uid;
+    let id = stream.mid;
     console.log(stream);
     console.log('stream.uid => '+id);
 
