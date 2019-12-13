@@ -27,7 +27,6 @@ client.on('transport-closed', function () {
 
 client.on('stream-add', async (rid, mid) => {
     let stream = await client.subscribe(rid, mid);
-    console.log(stream)
     streams[rid] = stream;
     insertVideoView('remote-video-container', rid);
     stream.render(stream.mid);
@@ -84,9 +83,7 @@ async function onPublishBtnClick() {
     showStatus('start publish!');
     let stream = await client.publish(/*{ codec: 'H264' }*/);
     let id = stream.uid;
-    stream.then((res) => {
-        console.log(JSON.stringify(res));
-    });
+    console.log(stream);
     console.log('stream.uid => '+id);
 
     insertVideoView('local-video-container', id);
