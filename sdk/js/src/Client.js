@@ -84,7 +84,7 @@ export default class Client extends EventEmitter {
                 pc.onicecandidate = async (e) => {
                     if (!pc.sendOffer) {
                         var offer = pc.localDescription;
-                        console.log('Send offer sdp => ' + offer.sdp);
+                        // console.log('Send offer sdp => ' + offer.sdp);
                         pc.sendOffer = true
                         let result = await this._protoo.request('publish', { jsep: offer, options });
                         await pc.setRemoteDescription(result.jsep);
@@ -122,7 +122,6 @@ export default class Client extends EventEmitter {
                 let pc = await this._createReceiver(mid);
                 pc.onaddstream = (e) => {
                     var stream = e.stream;
-                    console.log(stream);
                     console.log('Stream::pc::onaddstream', stream.id);
                     resolve(new Stream(mid, stream));
                 }
