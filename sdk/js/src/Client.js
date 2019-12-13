@@ -55,7 +55,6 @@ export default class Client extends EventEmitter {
 
     async join(roomId, info = { name: 'Guest' }) {
         this._rid = roomId;
-        console.log('join info: ' + info);
         try {
             let data = await this._protoo.request('join', { 'rid': this._rid, 'id': this._uid, info });
             console.log('join success: result => ' + JSON.stringify(data));
@@ -84,7 +83,9 @@ export default class Client extends EventEmitter {
                 pc.onicecandidate = async (e) => {
                     if (!pc.sendOffer) {
                         var offer = pc.localDescription;
-                        // console.log('Send offer sdp => ' + offer.sdp);
+                        let sdpParsed = sdpTransform.parse(offer.sdp)
+
+                        console.log('Send offer sdp => ' + sdpParsed);
                         pc.sendOffer = true
                         let result = await this._protoo.request('publish', { jsep: offer, options });
                         await pc.setRemoteDescription(result.jsep);
@@ -135,7 +136,8 @@ export default class Client extends EventEmitter {
                         // console.log('Send offer sdp => ' + jsep.sdp);
                         pc.sendOffer = true
                         let result = await this._protoo.request('subscribe', { rid, jsep, mid });
-                        console.log('subscribe success => result(' + mid + ') sdp => ' + result.jsep.sdp);
+                        let sdpParsed = sdpTransform.parse(result.jsep.sdp)
+                        console.log('subscribe success => result(' + mid + ') sdp => ' + sdpParsed);
                         await pc.setRemoteDescription(result.jsep);
                     }
                 }
