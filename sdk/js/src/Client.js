@@ -5,7 +5,9 @@ import Stream from './Stream';
 import * as sdpTransform from 'sdp-transform';
 
 const ices = 'stun:stun.l.google.com:19302';
-
+var log = msg => {
+    console.log(msg)
+}
 const DefaultPayloadTypePCMU = 0;
 const DefaultPayloadTypePCMA = 8;
 const DefaultPayloadTypeG722 = 9;
@@ -247,15 +249,12 @@ export default class Client extends EventEmitter {
     }
 
     async _createReceiver(mid) {
-        console.log('create receiver => %s', mid);
+        log('create receiver => %s', mid);
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
         pc.addTransceiver('audio', { 'direction': 'recvonly' });
         pc.addTransceiver('video', { 'direction': 'recvonly' });
         let desc = await pc.createOffer();
-        pc.createOffer()
-            .then(d => pc.setLocalDescription(d))
-            .catch(log)
         pc.setLocalDescription(desc);
         this._pcs[mid] = pc;
         return pc;
