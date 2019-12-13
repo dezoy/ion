@@ -61,12 +61,12 @@ function onJoinBtnClick() {
     var rommEl = document.getElementById('roomId');
     var nameEnt = document.getElementById('nameId');
     let roomId = rommEl.value;
-    let nameId = nameEnt.value;
+    let nameId = { name: nameEnt.value };
     if (roomId === '')
         return;
-    if (nameId === '')
+    if (nameId.name === '')
         return;
-    showStatus('join to [' + roomId + '] ' + nameId);
+    showStatus('join to [' + roomId + '] ' + nameId.name);
     client.join(roomId, nameId);
 }
 
