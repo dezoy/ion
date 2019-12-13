@@ -55,6 +55,7 @@ export default class Client extends EventEmitter {
 
     async join(roomId, info = { name: 'Guest' }) {
         this._rid = roomId;
+        console.log('join info: ' + info);
         try {
             let data = await this._protoo.request('join', { 'rid': this._rid, 'id': this._uid, info });
             console.log('join success: result => ' + JSON.stringify(data));
