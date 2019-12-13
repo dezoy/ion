@@ -82,7 +82,9 @@ async function onPublishBtnClick() {
     showStatus('start publish!');
     let stream = await client.publish(/*{ codec: 'H264' }*/);
     let id = stream.uid;
-    console.log(JSON.stringify(stream));
+    stream.then((res) => {
+        console.log(JSON.stringify(res));
+    });
     console.log('stream.uid => '+id);
 
     insertVideoView('local-video-container', id);
