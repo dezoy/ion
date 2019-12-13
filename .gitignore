@@ -15,6 +15,7 @@ islb.tar.gz
 cmd/ion/ion
 cmd/islb/islb
 sdk/package.json
+sdk/webpack.config.js
 other
 ion
 islb
