@@ -1,5 +1,7 @@
 logs
 bin
+package.json
+webpack.config.js
 configs/cert.pem
 configs/key.pem
 configs/ion.pid
@@ -14,8 +16,6 @@ ion.tar.gz
 islb.tar.gz
 cmd/ion/ion
 cmd/islb/islb
-sdk/js/package.json
-sdk/js/webpack.config.js
 other
 ion
 islb
