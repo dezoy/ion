@@ -67,7 +67,7 @@ function onJoinBtnClick() {
     if (nameId.name === '')
         return;
     showStatus('join to [' + roomId + '] ' + nameId.name);
-    client.join(roomId);
+    client.join(roomId, nameId);
 }
 
 async function onPublishBtnClick() {
