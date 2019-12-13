@@ -27,6 +27,7 @@ client.on('transport-closed', function () {
 
 client.on('stream-add', async (rid, mid) => {
     let stream = await client.subscribe(rid, mid);
+    console.log(stream)
     streams[rid] = stream;
     insertVideoView('remote-video-container', rid);
     stream.render(stream.uid);
