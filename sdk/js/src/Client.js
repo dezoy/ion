@@ -81,7 +81,8 @@ export default class Client extends EventEmitter {
                 let pc = await this._createSender(stream.stream, options.codec);
 
                 pc.onicecandidate = async (e) => {
-                    if (!pc.sendOffer) {
+                    if (e.candidate) {
+                    // if (!pc.sendOffer) {
                         var offer = pc.localDescription;
                         let sdpParsed = sdpTransform.parse(offer.sdp)
 
@@ -121,14 +122,14 @@ export default class Client extends EventEmitter {
         var promise = new Promise(async (resolve, reject) => {
             try {
                 let pc = await this._createReceiver(mid);
-                pc.onaddstream = (e) => {
+                pc.ontrack = (e) => {
                     var stream = e.stream;
-                    console.log('Stream::pc::onaddstream', stream.id);
+                    console.log('Stream::pc::ontrack', stream.id);
                     resolve(new Stream(mid, stream));
                 }
-                pc.onremovestream = (e) => {
+                pc.onremovetrack = (e) => {
                     var stream = e.stream;
-                    console.log('Stream::pc::onremovestream', stream.id);
+                    console.log('Stream::pc::onremovetrack', stream.id);
                 }
                 pc.onicecandidate = async (e) => {
                     if (!pc.sendOffer) {
@@ -245,15 +246,18 @@ export default class Client extends EventEmitter {
         return pc;
     }
 
-    async _createReceiver(uid) {
-        console.log('create receiver => %s', uid);
+    async _createReceiver(mid) {
+        console.log('create receiver => %s', mid);
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
         pc.addTransceiver('audio', { 'direction': 'recvonly' });
         pc.addTransceiver('video', { 'direction': 'recvonly' });
         let desc = await pc.createOffer();
+        pc.createOffer()
+            .then(d => pc.setLocalDescription(d))
+            .catch(log)
         pc.setLocalDescription(desc);
-        this._pcs[uid] = pc;
+        this._pcs[mid] = pc;
         return pc;
     }
 
