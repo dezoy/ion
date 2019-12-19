@@ -241,15 +241,14 @@ export default class Client extends EventEmitter {
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
         pc.addStream(stream);
-        let offer = await
-            pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false });
+        let offer = await pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false });
         let desc = this._payloadModify(offer, codec);
         pc.setLocalDescription(desc);
         return pc;
     }
 
     async _createReceiver(mid) {
-        log('create receiver => %s', mid);
+        log('create receiver => ' + mid);
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
         pc.addTransceiver('audio', { 'direction': 'recvonly' });
@@ -309,7 +308,7 @@ export default class Client extends EventEmitter {
                     const { rid, mid } = data;
                     console.log('stream-remove peer rid => %s, mid => %s', rid, mid);
                     this.emit('stream-remove', rid, mid);
-                    this._removePC(pid);
+                    this._removePC(mid);
                     break;
                 }
         }
