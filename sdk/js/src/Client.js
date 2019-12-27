@@ -125,8 +125,7 @@ export default class Client extends EventEmitter {
             try {
                 let pc = await this._createReceiver(mid);
                 pc.ontrack = (e) => {
-                    var stream = e.stream;
-                    console.log(e);
+                    var stream = e.streams[0];
                     console.log('Stream::pc::ontrack', stream.id);
                     resolve(new Stream(mid, stream));
                 }
