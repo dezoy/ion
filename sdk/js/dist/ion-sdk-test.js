@@ -6,7 +6,12 @@ var streams = new Map();
 window.onunload = function () {
     client.leave();
 }
-
+window.onunload = async () => {
+    await this._cleanUp();
+};
+_cleanUp = async () => {
+    await client.leave();
+};
 client.on('peer-join', (id, rid) => {
     showStatus('peer => ' + id + ', join!');
 });
@@ -59,9 +64,9 @@ function showStatus(text) {
 }
 
 function onJoinBtnClick() {
-    var rommEl = document.getElementById('roomId');
+    var roomEl = document.getElementById('roomId');
     var nameEnt = document.getElementById('nameId');
-    let roomId = rommEl.value;
+    let roomId = roomEl.value;
     let nameId = { name: nameEnt.value };
     if (roomId === '')
         return;
@@ -69,6 +74,19 @@ function onJoinBtnClick() {
         return;
     showStatus('join to [' + roomId + '] ' + nameId.name);
     client.join(roomId, nameId);
+    document.getElementById('join_btn').setAttribute("disabled", "disabled");
+    document.getElementById('leave_btn').removeAttribute("disabled");
+}
+
+function onLeaveBtnClick() {
+    var roomEl = document.getElementById('roomId');
+    var nameEnt = document.getElementById('nameId');
+    let roomId = roomEl.value;
+    let nameId = { name: nameEnt.value };
+    showStatus('leave [' + roomId + '] ' + nameId.name);
+    _cleanUp()
+    document.getElementById('join_btn').removeAttribute("disabled");
+    document.getElementById('leave_btn').setAttribute("disabled", "disabled");
 }
 
 async function onPublishBtnClick() {
