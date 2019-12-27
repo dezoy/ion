@@ -241,7 +241,7 @@ export default class Client extends EventEmitter {
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
         pc.addStream(stream);
-        let offer = await pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false });
+        let offer = await pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false })
         let desc = this._payloadModify(offer, codec);
         pc.setLocalDescription(desc);
         return pc;
@@ -253,8 +253,10 @@ export default class Client extends EventEmitter {
         pc.sendOffer = false;
         pc.addTransceiver('audio', { 'direction': 'recvonly' });
         pc.addTransceiver('video', { 'direction': 'recvonly' });
-        let desc = await pc.createOffer();
-        pc.setLocalDescription(desc);
+        await pc.createOffer()
+            .then(d => pc.setLocalDescription(d))
+            .catch(log);
+        
         this._pcs[mid] = pc;
         return pc;
     }
