@@ -16,7 +16,6 @@ export default class Stream extends EventEmitter {
                 this._stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
             } else {
                 try {
-                    console.log(options)
                     this._stream = await navigator.mediaDevices.getUserMedia({ audio: options.audio, video: options.video });
                 } catch (err) {
                     console.log(err)
