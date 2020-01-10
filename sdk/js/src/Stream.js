@@ -10,17 +10,16 @@ export default class Stream extends EventEmitter {
         this._videoElement = new VideoElement();
     }
 
-    async init(sender = false, options = { audio: true, video: true, screen: false }) {
+    async init(sender = false, audio = true, video = true, screen = false) {
         if (sender) {
-            if (options.screen) {
-                this._stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            if (screen) {
+                this._stream = await navigator
+                    .mediaDevices
+                    .getDisplayMedia({ video: true });
             } else {
-                try {
-                    this._stream = await navigator.mediaDevices.getUserMedia({ audio: options.audio, video: options.video });
-                } catch (err) {
-                    console.log(err)
-                    /* handle the error */
-                }
+                this._stream = await navigator
+                    .mediaDevices
+                    .getUserMedia({ audio: audio, video: video });
             }
         }
     }
