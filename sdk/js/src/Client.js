@@ -96,10 +96,10 @@ export default class Client extends EventEmitter {
                         let result = await this
                             ._protoo
                             .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
-
-                        console.log('publish success => ' + typeof result );
+                            
                         var desc = new RTCSessionDescription(result.jsep);
                         await pc.setRemoteDescription(desc);
+                        console.log('publish success => ' + typeof result );
                         stream.mid = result.mid;
                         this._pcs[stream.mid] = pc;
                         resolve(stream);
@@ -136,26 +136,32 @@ export default class Client extends EventEmitter {
         var promise = new Promise(async (resolve, reject) => {
             try {
                 let pc = await this._createReceiver(mid);
-                pc.ontrack = (e) => {
-                    var stream = e.streams[0];
-                    console.log('Stream::pc::ontrack', stream.id);
+                pc.onaddstream = (stream) => {
+                    console.log('Stream::pc::onaddstream', stream.id);
                     resolve(new Stream(mid, stream));
                 }
-                pc.onremovetrack = (e) => {
-                    var stream = e.stream;
-                    console.log('Stream::pc::onremovetrack', stream.id);
+                pc.onremovestream = (stream) => {
+                    console.log('Stream::pc::onremovestream', stream.id);
                 }
                 pc.onicecandidate = async (e) => {
-                    if (!pc.sendOffer) {
+                    if (e.candidate) {
+                    // if (!pc.sendOffer) {
                         var jsep = pc.localDescription;
                         // console.log('Send offer sdp => ' + jsep.sdp);
                         pc.sendOffer = true
-                        let result = await this._protoo.request('subscribe', { rid, jsep, mid });
+                        let result = await this
+                            ._protoo
+                            .request('subscribe', {'rid': rid, 'jsep': jsep, 'mid': mid});
+
                         let sdpParsed = sdpTransform.parse(result.jsep.sdp)
                         console.log('subscribe success => result(' + mid + ') sdp => ' + sdpParsed);
-                        await pc.setRemoteDescription(result.jsep);
+                        var desc = new RTCSessionDescription(result.jsep);
+                        await pc.setRemoteDescription(desc);
                     }
                 }
+                let offer = await pc.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true })
+                await pc.setLocalDescription(offer);
+                this._pcs[mid] = pc;
             } catch (error) {
                 console.log('subscribe request error  => ' + error);
                 reject(error);
