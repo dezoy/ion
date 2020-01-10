@@ -92,16 +92,13 @@ export default class Client extends EventEmitter {
                     if (e.candidate) {
                     // if (!pc.sendOffer) {
                         pc.sendOffer = true
-                        var offer = pc.localDescription;
-                        
-                        console.log('Send offer sdp => ' + JSON.stringify(offer) );
-                        let sdpParsed = sdpTransform.parse(offer.sdp)
+                        let offer = pc.localDescription;                        
                         let result = await this
                             ._protoo
                             .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
 
                         console.log('publish success => ' + JSON.stringify(result) );
-                        var desc = new RTCSessionDescription(result.jsep);
+                        var desc = new RTCSessionDescription(result.jsep.sdp, result.jsep.type);
                         await pc.setRemoteDescription(desc);
                         stream.mid = result.mid;
                         this._pcs[stream.mid] = pc;
@@ -150,7 +147,7 @@ export default class Client extends EventEmitter {
                 }
                 pc.onicecandidate = async (e) => {
                     if (!pc.sendOffer) {
-                        var jsep = pc.currentLocalDescription;
+                        var jsep = pc.localDescription;
                         // console.log('Send offer sdp => ' + jsep.sdp);
                         pc.sendOffer = true
                         let result = await this._protoo.request('subscribe', { rid, jsep, mid });
