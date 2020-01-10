@@ -83,16 +83,16 @@ export default class Client extends EventEmitter {
                 let pc = await this._createSender(stream.stream, options.codec);
 
                 pc.onicecandidate = async (e) => {
-                    // if (e.candidate) {
-                    if (!pc.sendOffer) {
+                    if (e.candidate) {
+                    // if (!pc.sendOffer) {
                         var offer = pc.localDescription;
                         let sdpParsed = sdpTransform.parse(offer.sdp)
 
-                        console.log('Send offer sdp => ' + sdpParsed);
+                        console.log('Send offer sdp => ' + JSON.stringify(sdpParsed) );
                         pc.sendOffer = true
                         let result = await this._protoo.request('publish', { rid: this._rid, jsep: offer, options });
                         await pc.setRemoteDescription(result.jsep);
-                        console.log('publish success => ' + JSON.stringify(result));
+                        console.log('publish success => ' + JSON.stringify(result) );
                         stream.mid = result.mid;
                         this._pcs[stream.mid] = pc;
                         resolve(stream);
@@ -286,16 +286,16 @@ export default class Client extends EventEmitter {
         switch (method) {
             case 'peer-join':
                 {
-                    const { rid, id, info } = data;
-                    console.log('peer-join peer rid => %s, id => %s, info => %o', rid, id, info);
-                    this.emit('peer-join', rid, id, info);
+                    const { rid, uid, info } = data;
+                    console.log('peer-join peer rid => %s, id => %s, info => %o', rid, uid, info);
+                    this.emit('peer-join', rid, uid, info);
                     break;
                 }
             case 'peer-leave':
                 {
-                    const { rid, id } = data;
-                    console.log('peer-leave peer rid => %s, id => %s', rid, id);
-                    this.emit('peer-leave', rid, id);
+                    const { rid, uid } = data;
+                    console.log('peer-leave peer rid => %s, id => %s', rid, uid);
+                    this.emit('peer-leave', rid, uid);
                     break;
                 }
             case 'stream-add':
