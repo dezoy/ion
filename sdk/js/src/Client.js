@@ -93,9 +93,9 @@ export default class Client extends EventEmitter {
                     // if (!pc.sendOffer) {
                         pc.sendOffer = true
                         var offer = pc.currentLocalDescription;
+                        
+                        console.log('Send offer sdp => ' + JSON.stringify(offer) );
                         let sdpParsed = sdpTransform.parse(offer.sdp)
-
-                        console.log('Send offer sdp => ' + JSON.stringify(sdpParsed) );
                         let result = await this
                             ._protoo
                             .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
