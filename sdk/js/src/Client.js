@@ -100,9 +100,9 @@ export default class Client extends EventEmitter {
                             ._protoo
                             .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
 
+                        console.log('publish success => ' + JSON.stringify(result) );
                         var desc = new RTCSessionDescription(result.jsep);
                         await pc.setRemoteDescription(desc);
-                        console.log('publish success => ' + JSON.stringify(result) );
                         stream.mid = result.mid;
                         this._pcs[stream.mid] = pc;
                         resolve(stream);
