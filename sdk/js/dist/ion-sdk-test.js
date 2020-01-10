@@ -110,7 +110,7 @@ async function onPublishBtnClick() {
     published = true;
 
     document.getElementById('publish_btn').removeAttribute("disabled");
-    document.getElementById('unpublish_btn').setAttribute("disabled", "disabled");
+    document.getElementById('unpublish_btn').setAttribute("disabled", true);
 }
 async function onUnPublishBtnClick() {
     if ( ! connected) {
@@ -127,7 +127,7 @@ async function onUnPublishBtnClick() {
     removeVideoView(stream_id)
     published = false;
 
-    document.getElementById('unpublish_btn').setAttribute("disabled", "disabled");
+    document.getElementById('unpublish_btn').setAttribute("disabled", true);
     document.getElementById('publish_btn').removeAttribute("disabled");
 }
 
