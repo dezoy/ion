@@ -123,7 +123,7 @@ async function onUnPublishBtnClick() {
         return;
     }
     showStatus('unpublish');
-    await client.unpublish();
+    await client.unpublish(stream_id);
 
     removeVideoView(stream_id)
     published = false;
