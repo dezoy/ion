@@ -92,7 +92,7 @@ export default class Client extends EventEmitter {
                     if (e.candidate) {
                     // if (!pc.sendOffer) {
                         pc.sendOffer = true
-                        var offer = pc.currentLocalDescription;
+                        var offer = pc.localDescription;
                         
                         console.log('Send offer sdp => ' + JSON.stringify(offer) );
                         let sdpParsed = sdpTransform.parse(offer.sdp)
