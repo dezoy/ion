@@ -1,6 +1,7 @@
 var client = new Client();
 var connected = false;
 var published = false;
+var stream_id = false;
 var streams = new Map();
 
 window.onunload = function () {
@@ -100,13 +101,34 @@ async function onPublishBtnClick() {
     }
     showStatus('start publish!');
     let stream = await client.publish(/*{ codec: 'H264' }*/);
-    let id = stream.mid;
+    stream_id = stream.mid;
     console.log(stream);
-    console.log('stream.uid => '+id);
+    console.log('stream.uid => ' + stream_id);
 
-    insertVideoView('local-video-container', id);
-    stream.render(id);
+    insertVideoView('local-video-container', stream_id);
+    stream.render(stream_id);
     published = true;
+
+    document.getElementById('publish_btn').removeAttribute("disabled");
+    document.getElementById('unpublish_btn').setAttribute("disabled", "disabled");
+}
+async function onUnPublishBtnClick() {
+    if ( ! connected) {
+        alert('not connected to the server!');
+        return;
+    }
+    if ( ! published) {
+        alert('not published!');
+        return;
+    }
+    showStatus('unpublish');
+    await client.unpublish();
+
+    removeVideoView(stream_id)
+    published = false;
+
+    document.getElementById('unpublish_btn').setAttribute("disabled", "disabled");
+    document.getElementById('publish_btn').removeAttribute("disabled");
 }
 
 client.init();
