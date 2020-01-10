@@ -99,10 +99,10 @@ export default class Client extends EventEmitter {
                     }
                 }
             } catch (error) {
-                throw error;
                 console.log('publish request error  => ' + error);
                 pc.close();
                 reject(error);
+                throw error;
             }
         });
         return promise;
