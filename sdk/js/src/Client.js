@@ -74,7 +74,7 @@ export default class Client extends EventEmitter {
         }
     }
 
-    async publish(options = { audio: true, video: true, screen: false, codec: 'vp8' }) {
+    async publish(options = { audio: true, video: true, screen: false, codec: 'vp9' }) {
         console.log('publish options => %o', options);
         var promise = new Promise(async (resolve, reject) => {
             try {
@@ -83,8 +83,8 @@ export default class Client extends EventEmitter {
                 let pc = await this._createSender(stream.stream, options.codec);
 
                 pc.onicecandidate = async (e) => {
-                    if (e.candidate) {
-                    // if (!pc.sendOffer) {
+                    // if (e.candidate) {
+                    if (!pc.sendOffer) {
                         var offer = pc.localDescription;
                         let sdpParsed = sdpTransform.parse(offer.sdp)
 
