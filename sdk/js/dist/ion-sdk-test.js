@@ -109,9 +109,10 @@ async function onPublishBtnClick() {
     stream.render(stream_id);
     published = true;
 
-    document.getElementById('publish_btn').removeAttribute("disabled");
-    document.getElementById('unpublish_btn').setAttribute("disabled", true);
+    document.getElementById('publish_btn').setAttribute("disabled", true);
+    document.getElementById('unpublish_btn').removeAttribute("disabled");
 }
+
 async function onUnPublishBtnClick() {
     if ( ! connected) {
         alert('not connected to the server!');
@@ -127,8 +128,8 @@ async function onUnPublishBtnClick() {
     removeVideoView(stream_id)
     published = false;
 
-    document.getElementById('unpublish_btn').setAttribute("disabled", true);
     document.getElementById('publish_btn').removeAttribute("disabled");
+    document.getElementById('unpublish_btn').setAttribute("disabled", true);
 }
 
 client.init();
