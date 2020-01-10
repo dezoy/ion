@@ -55,11 +55,14 @@ export default class Client extends EventEmitter {
         this._protoo.on('notification', this._handleNotification.bind(this));
     }
 
-    async join(roomId, info = { name: 'Guest' }) {
+    async join(roomId, info) {
         this._rid = roomId;
         try {
-            let data = await this._protoo.request('join', { 'rid': this._rid, 'uid': this._uid, info });
-            console.log('join success: result => ' + JSON.stringify(data));
+            let data = await this
+                ._protoo
+                .request('join', {'rid': this._rid, 'uid': this._uid, 'info': info})
+            console.log('join success: result => ' + JSON.stringify(data))
+            return data
         } catch (error) {
             console.log('join reject: error =>' + error);
         }
@@ -67,8 +70,11 @@ export default class Client extends EventEmitter {
 
     async leave() {
         try {
-            let data = await this._protoo.request('leave', { 'rid': this._rid, 'uid': this._uid });
+            let data = await this
+                ._protoo
+                .request('leave', {'rid': this._rid, 'uid': this._uid});
             console.log('leave success: result => ' + JSON.stringify(data));
+            return data;
         } catch (error) {
             console.log('leave reject: error =>' + error);
         }
@@ -80,29 +86,35 @@ export default class Client extends EventEmitter {
             try {
                 let stream = new Stream();
                 await stream.init(true, { audio: options.audio, video: options.video, screen: options.screen });
-                let pc = await this._createSender(stream.stream, options.codec);
+                let pc = await this._createSender(stream.stream);
 
                 pc.onicecandidate = async (e) => {
                     if (e.candidate) {
                     // if (!pc.sendOffer) {
-                        var offer = pc.localDescription;
+                        pc.sendOffer = true
+                        var offer = pc.currentLocalDescription;
                         let sdpParsed = sdpTransform.parse(offer.sdp)
 
                         console.log('Send offer sdp => ' + JSON.stringify(sdpParsed) );
-                        pc.sendOffer = true
-                        let result = await this._protoo.request('publish', { rid: this._rid, jsep: offer, options });
-                        await pc.setRemoteDescription(result.jsep);
+                        let result = await this
+                            ._protoo
+                            .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
+
+                        var desc = new RTCSessionDescription(result.jsep);
+                        await pc.setRemoteDescription(desc);
                         console.log('publish success => ' + JSON.stringify(result) );
                         stream.mid = result.mid;
                         this._pcs[stream.mid] = pc;
                         resolve(stream);
                     }
                 }
+                let offer = await pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false })
+                let desc = this._payloadModify(offer, options.codec);
+                await pc.setLocalDescription(desc);
             } catch (error) {
                 console.log('publish request error  => ' + error);
                 pc.close();
                 reject(error);
-                throw error;
             }
         });
         return promise;
@@ -112,8 +124,11 @@ export default class Client extends EventEmitter {
         console.log('unpublish rid => %s, mid => %s', this._rid, mid);
         this._removePC(mid);
         try {
-            let data = await this._protoo.request('unpublish', { rid: this._rid, mid });
+            let data = await this
+                ._protoo
+                .request('unpublish', { rid: this._rid, mid });
             console.log('unpublish success: result => ' + JSON.stringify(data));
+            return data;
         } catch (error) {
             console.log('unpublish reject: error =>' + error);
         }
@@ -135,7 +150,7 @@ export default class Client extends EventEmitter {
                 }
                 pc.onicecandidate = async (e) => {
                     if (!pc.sendOffer) {
-                        var jsep = pc.localDescription;
+                        var jsep = pc.currentLocalDescription;
                         // console.log('Send offer sdp => ' + jsep.sdp);
                         pc.sendOffer = true
                         let result = await this._protoo.request('subscribe', { rid, jsep, mid });
@@ -236,14 +251,10 @@ export default class Client extends EventEmitter {
         return tmp;
     }
 
-    async _createSender(stream, codec) {
-        console.log('create sender => %s', codec);
+    async _createSender(stream) {
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
         pc.addStream(stream);
-        let offer = await pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false })
-        let desc = this._payloadModify(offer, codec);
-        pc.setLocalDescription(desc);
         return pc;
     }
 
