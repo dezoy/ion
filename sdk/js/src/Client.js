@@ -98,7 +98,7 @@ export default class Client extends EventEmitter {
                             .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
 
                         console.log('publish success => ' + JSON.stringify(result) );
-                        var desc = new RTCSessionDescription(result.jsep.sdp, result.jsep.type);
+                        var desc = new RTCSessionDescription(result.jsep['sdp'], result.jsep['type']);
                         await pc.setRemoteDescription(desc);
                         stream.mid = result.mid;
                         this._pcs[stream.mid] = pc;
