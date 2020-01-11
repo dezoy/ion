@@ -85,7 +85,7 @@ export default class Client extends EventEmitter {
         var promise = new Promise(async (resolve, reject) => {
             try {
                 let stream = new Stream();
-                await stream.init(true, { audio: options.audio, video: options.video, screen: options.screen });
+                await stream.init(true, options.audio, options.video, options.screen);
                 let pc = await this._createSender(stream.stream);
 
                 pc.onicecandidate = async (e) => {
