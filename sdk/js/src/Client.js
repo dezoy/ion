@@ -158,7 +158,7 @@ export default class Client extends EventEmitter {
                             .request('subscribe', {'rid': rid, 'jsep': jsep, 'mid': mid});
 
                         let sdpParsed = sdpTransform.parse(result.jsep.sdp)
-                        console.log('subscribe success => result(' + mid + ') sdp => ' + sdpParsed);
+                        console.log('subscribe success => result(' + mid + ') sdp => ' + JSON.stringify(sdpParsed) );
                         var desc = new RTCSessionDescription(result.jsep);
                         await pc.setRemoteDescription(desc);
                     }
