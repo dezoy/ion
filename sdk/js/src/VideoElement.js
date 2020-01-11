@@ -4,6 +4,7 @@ class VideoElement {
     }
 
     play(options = { id, stream, elementId, remote: false }) {
+        console.log(options)
         console.log('play => ' + JSON.stringify(options))
         let video = document.createElement('video');
         video.autoplay = true;

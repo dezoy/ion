@@ -33,8 +33,6 @@ export default class Stream extends EventEmitter {
 
     render(element) {
         console.log(this._stream)
-        console.log(this.stream)
-        console.log(stream)
         this._videoElement.play({id: this._mid, stream: this._stream, elementId: element});
     }
 
