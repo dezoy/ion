@@ -39,10 +39,11 @@ client.on('stream-add', async (rid, mid) => {
     // stream.render(stream.uid); //old
 });
 
-client.on('stream-remove', async (rid) => {
+client.on('stream-remove', async (rid, mid) => {
     let stream = streams[rid];
     removeVideoView(rid);
     stream.stop();
+    await client.unsubscribe(rid, mid);
     delete streams[rid];
 });
 
