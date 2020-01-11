@@ -136,11 +136,15 @@ export default class Client extends EventEmitter {
         var promise = new Promise(async (resolve, reject) => {
             try {
                 let pc = await this._createReceiver(mid);
-                pc.onaddstream = (stream) => {
+                // pc.onaddstream = (stream) => {
+                pc.onaddtrack = (e) => {
+                    let stream = streams[0]
                     console.log('Stream::pc::onaddstream', stream.id);
                     resolve(new Stream(mid, stream));
                 }
-                pc.onremovestream = (stream) => {
+                // pc.onremovestream = (stream) => {
+                pc.onremovetrack = (e) => {
+                    let stream = streams[0]
                     console.log('Stream::pc::onremovestream', stream.id);
                 }
                 pc.onicecandidate = async (e) => {
