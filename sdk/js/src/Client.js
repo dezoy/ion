@@ -6,13 +6,13 @@ import * as sdpTransform from 'sdp-transform';
 
 const ices = [
     {
-        url: 'stun:stun.l.google.com:19302'
+        urls: 'stun:stun.l.google.com:19302'
     },{
-        url: 'turn:185.137.233.49:3478',
+        urls: 'turn:185.137.233.49:3478',
         username: '123qwe',
         credential: 'ewq321'
     },{
-        url: 'turn:185.143.172.77:3478',
+        urls: 'turn:185.143.172.77:3478',
         username: 'user1',
         credential: 'pass1'
     },
