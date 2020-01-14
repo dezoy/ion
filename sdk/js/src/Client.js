@@ -122,7 +122,7 @@ export default class Client extends EventEmitter {
                 await pc.setLocalDescription(desc);
             } catch (error) {
                 console.log('publish request error  => ' + error);
-                pc.close();
+                // pc.close();
                 reject(error);
             }
         });
