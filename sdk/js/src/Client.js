@@ -271,7 +271,7 @@ export default class Client extends EventEmitter {
     }
 
     async _createSender(stream) {
-        let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
+        let pc = new RTCPeerConnection({ iceServers: ices });
         pc.sendOffer = false;
         // pc.addStream(stream);
         for (const track of stream.getTracks() ) {
