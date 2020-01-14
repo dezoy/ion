@@ -4,7 +4,19 @@ import uuidv4 from 'uuid/v4';
 import Stream from './Stream';
 import * as sdpTransform from 'sdp-transform';
 
-const ices = 'stun:stun.l.google.com:19302';
+const ices = [
+    {
+        url: 'stun:stun.l.google.com:19302'
+    },{
+        url: 'turn:185.137.233.49:3478',
+        username: '123qwe',
+        credential: 'ewq321'
+    },{
+        url: 'turn:185.143.172.77:3478',
+        username: 'user1',
+        credential: 'pass1'
+    },
+];
 var log = msg => {
     console.log(msg)
 }
@@ -261,13 +273,16 @@ export default class Client extends EventEmitter {
     async _createSender(stream) {
         let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
         pc.sendOffer = false;
-        pc.addStream(stream);
+        // pc.addStream(stream);
+        for (const track of stream.getTracks() ) {
+            pc.addTrack(track, stream);
+        }
         return pc;
     }
 
     async _createReceiver(mid) {
         log('create receiver => ' + mid);
-        let pc = new RTCPeerConnection({ iceServers: [{ urls: ices }] });
+        let pc = new RTCPeerConnection({iceServers: ices});
         pc.sendOffer = false;
         pc.addTransceiver('audio', { 'direction': 'recvonly' });
         pc.addTransceiver('video', { 'direction': 'recvonly' });
