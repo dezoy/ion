@@ -69,6 +69,7 @@ export default class Client extends EventEmitter {
 
     async join(roomId, info) {
         this._rid = roomId;
+        info = info ?? { 'name': 'Guest' };
         try {
             let data = await this
                 ._protoo
@@ -104,20 +105,24 @@ export default class Client extends EventEmitter {
                     if (e.candidate) {
                     // if (!pc.sendOffer) {
                         pc.sendOffer = true
-                        let offer = pc.localDescription;                        
+                        let jsep = pc.localDescription;                        
                         let result = await this
                             ._protoo
-                            .request('publish', {'rid': this._rid, 'jsep': offer, 'options': options});
+                            .request('publish', { 'rid': this._rid, 'jsep': jsep, 'options': options})
                             
-                        var desc = new RTCSessionDescription(result.jsep);
-                        await pc.setRemoteDescription(desc);
-                        console.log('publish success => ' + typeof result );
-                        stream.mid = result.mid;
-                        this._pcs[stream.mid] = pc;
+                        await pc.setRemoteDescription(
+                                RTCSessionDescription(result.jsep)
+                            )
+                        console.log('publish success => ' + typeof result )
+                        stream.mid = result.mid
+                        this._pcs[stream.mid] = pc
                         resolve(stream);
                     }
                 }
-                let offer = await pc.createOffer({ offerToReceiveVideo: false, offerToReceiveAudio: false })
+                let offer = await pc.createOffer({
+                        offerToReceiveVideo: false, 
+                        offerToReceiveAudio: false 
+                    })
                 let desc = this._payloadModify(offer, options.codec);
                 await pc.setLocalDescription(desc);
             } catch (error) {
@@ -148,15 +153,15 @@ export default class Client extends EventEmitter {
         var promise = new Promise(async (resolve, reject) => {
             try {
                 let pc = await this._createReceiver(mid);
-                // pc.onaddstream = (stream) => {
-                pc.onaddtrack = (e) => {
-                    let stream = streams[0]
+                pc.onaddstream = (stream) => {
+                // pc.onaddtrack = (e) => {
+                    // let stream = streams[0]
                     console.log('Stream::pc::onaddstream', stream.id);
                     resolve(new Stream(mid, stream));
                 }
-                // pc.onremovestream = (stream) => {
-                pc.onremovetrack = (e) => {
-                    let stream = streams[0]
+                pc.onremovestream = (stream) => {
+                // pc.onremovetrack = (e) => {
+                    // let stream = streams[0]
                     console.log('Stream::pc::onremovestream', stream.id);
                 }
                 pc.onicecandidate = async (e) => {
@@ -172,13 +177,17 @@ export default class Client extends EventEmitter {
 
                         let sdpParsed = sdpTransform.parse(result.jsep.sdp)
                         console.log('subscribe success => result(' + mid + ') sdp => ' + JSON.stringify(sdpParsed) );
-                        var desc = new RTCSessionDescription(result.jsep);
-                        await pc.setRemoteDescription(desc);
+                        await pc.setRemoteDescription(
+                                RTCSessionDescription(result.jsep)
+                            );
                     } else {
                         // All ICE candidates have been sent
                     }
                 }
-                let offer = await pc.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true })
+                let offer = await pc.createOffer({
+                        offerToReceiveVideo: true, 
+                        offerToReceiveAudio: true
+                    })
                 await pc.setLocalDescription(offer);
                 this._pcs[mid] = pc;
             } catch (error) {
@@ -194,7 +203,7 @@ export default class Client extends EventEmitter {
             let data = await this
                 ._protoo
                 .request('unsubscribe', { 'rid': rid, 'mid': mid });
-                
+
             console.log('unsubscribe success: result => ' + JSON.stringify(data));
             this._removePC(mid);
         } catch (error) {
