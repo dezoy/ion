@@ -5,13 +5,12 @@ class VideoElement {
 
     play(options = { id, stream, elementId, remote: false }) {
         console.log('play => ' + JSON.stringify(options))
-        console.log(options.stream)
         let video = document.createElement('video');
         video.autoplay = true;
         video.playsinline = true;
         video.controls = true;
         video.muted = !options.remote;
-        video.srcObject = options.stream.stream;
+        video.srcObject = options.stream;
         video.id = `stream${options.id}`;
         let parentElement = document.getElementById(options.elementId);
         parentElement.appendChild(video);
