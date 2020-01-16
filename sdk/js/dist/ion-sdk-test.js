@@ -31,10 +31,13 @@ client.on('transport-closed', function () {
     connected = false;
 });
 
-client.on('stream-add', async (rid, mid) => {
+client.on('stream-add', async (rid, mid, info) => {
     let stream = await client.subscribe(rid, mid);
-    streams[rid] = stream;
-    insertVideoView('remote-video-container', rid);
+    stream.info = info;
+    streams.push({ mid, stream });
+    // streams[rid] = stream;
+    insertVideoView('remote-video-container', stream.mid);
+    // insertVideoView('remote-video-container', rid);
     stream.render(rid);
     // stream.render(stream.uid); //old
 });

@@ -160,6 +160,7 @@ export default class Client extends EventEmitter {
                     console.log('Stream::pc::onremovestream', stream.id);
                 }
                 pc.onicecandidate = async (e) => {
+                    // Send the candidate to the remote peer
                     if (e.candidate) {
                     // if (!pc.sendOffer) {
                         var jsep = pc.localDescription;
@@ -173,6 +174,8 @@ export default class Client extends EventEmitter {
                         console.log('subscribe success => result(' + mid + ') sdp => ' + JSON.stringify(sdpParsed) );
                         var desc = new RTCSessionDescription(result.jsep);
                         await pc.setRemoteDescription(desc);
+                    } else {
+                        // All ICE candidates have been sent
                     }
                 }
                 let offer = await pc.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true })
@@ -187,9 +190,11 @@ export default class Client extends EventEmitter {
     }
 
     async unsubscribe(rid, mid) {
-        console.log('unsubscribe rid => %s, mid => %s', rid, mid);
         try {
-            let data = await this._protoo.request('unsubscribe', { rid, mid });
+            let data = await this
+                ._protoo
+                .request('unsubscribe', { 'rid': rid, 'mid': mid });
+                
             console.log('unsubscribe success: result => ' + JSON.stringify(data));
             this._removePC(mid);
         } catch (error) {
@@ -281,14 +286,14 @@ export default class Client extends EventEmitter {
     }
 
     async _createReceiver(mid) {
-        log('create receiver => ' + mid);
+        // log('create receiver => ' + mid);
         let pc = new RTCPeerConnection({iceServers: ices});
         pc.sendOffer = false;
-        pc.addTransceiver('audio', { 'direction': 'recvonly' });
-        pc.addTransceiver('video', { 'direction': 'recvonly' });
-        await pc.createOffer()
-            .then(d => pc.setLocalDescription(d))
-            .catch(log);
+        // pc.addTransceiver('audio', { 'direction': 'recvonly' });
+        // pc.addTransceiver('video', { 'direction': 'recvonly' });
+        // await pc.createOffer()
+        //     .then(d => pc.setLocalDescription(d))
+        //     .catch(log);
         
         this._pcs[mid] = pc;
         return pc;
