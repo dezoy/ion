@@ -69,7 +69,7 @@ export default class Client extends EventEmitter {
 
     async join(roomId, info) {
         this._rid = roomId;
-        info = info ?? { 'name': 'Guest' };
+        
         try {
             let data = await this
                 ._protoo
