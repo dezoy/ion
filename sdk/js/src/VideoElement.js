@@ -12,7 +12,7 @@ class VideoElement {
         video.controls = true;
         video.muted = !options.remote;
         video.srcObject = options.stream;
-        video.id = 'stream' + ${options.id};
+        video.id = `stream${options.id}`;
         let parentElement = document.getElementById(options.elementId);
         parentElement.appendChild(video);
         this.parentElement = parentElement;
