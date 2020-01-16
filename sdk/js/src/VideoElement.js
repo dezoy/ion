@@ -11,7 +11,7 @@ class VideoElement {
         video.playsinline = true;
         video.controls = true;
         video.muted = !options.remote;
-        video.srcObject = options.stream;
+        video.srcObject = options.stream.stream;
         video.id = `stream${options.id}`;
         let parentElement = document.getElementById(options.elementId);
         parentElement.appendChild(video);
