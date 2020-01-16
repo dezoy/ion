@@ -111,7 +111,7 @@ export default class Client extends EventEmitter {
                             .request('publish', { 'rid': this._rid, 'jsep': jsep, 'options': options})
                             
                         await pc.setRemoteDescription(
-                                RTCSessionDescription(result.jsep)
+                                new RTCSessionDescription(result.jsep)
                             )
                         console.log('publish success => ' + typeof result )
                         stream.mid = result.mid
@@ -178,7 +178,7 @@ export default class Client extends EventEmitter {
                         let sdpParsed = sdpTransform.parse(result.jsep.sdp)
                         console.log('subscribe success => result(' + mid + ') sdp => ' + JSON.stringify(sdpParsed) );
                         await pc.setRemoteDescription(
-                                RTCSessionDescription(result.jsep)
+                                new RTCSessionDescription(result.jsep)
                             );
                     } else {
                         // All ICE candidates have been sent
