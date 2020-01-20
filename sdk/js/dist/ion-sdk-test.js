@@ -80,7 +80,7 @@ function onJoinBtnClick() {
     showStatus('join to [' + roomId + '] ' + nameId.name);
     client.join(roomId, nameId);
     document.getElementById('join_btn').setAttribute("disabled", "disabled");
-    document.getElementById('leave_btn').removeAttribute("disabled");
+    document.getElementById('leave_btn').setAttribute("disabled", null);
 }
 
 function onLeaveBtnClick() {
@@ -90,7 +90,7 @@ function onLeaveBtnClick() {
     let nameId = { name: nameEnt.value };
     showStatus('leave [' + roomId + '] ' + nameId.name);
     _cleanUp()
-    document.getElementById('join_btn').removeAttribute("disabled");
+    document.getElementById('join_btn').setAttribute("disabled", null);
     document.getElementById('leave_btn').setAttribute("disabled", "disabled");
 }
 
@@ -113,8 +113,8 @@ async function onPublishBtnClick() {
     stream.render(stream_id);
     published = true;
 
-    document.getElementById('publish_btn').setAttribute("disabled", true);
-    document.getElementById('unpublish_btn').removeAttribute("disabled");
+    document.getElementById('publish_btn').setAttribute("disabled", "disabled");
+    document.getElementById('unpublish_btn').setAttribute("disabled", null);
 }
 
 async function onUnPublishBtnClick() {
@@ -132,8 +132,8 @@ async function onUnPublishBtnClick() {
     removeVideoView(stream_id)
     published = false;
 
-    document.getElementById('publish_btn').removeAttribute("disabled");
-    document.getElementById('unpublish_btn').setAttribute("disabled", true);
+    document.getElementById('publish_btn').setAttribute("disabled", null);
+    document.getElementById('unpublish_btn').setAttribute("disabled", "disabled");
 }
 
 client.init();
